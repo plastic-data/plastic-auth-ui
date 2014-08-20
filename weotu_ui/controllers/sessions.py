@@ -29,9 +29,11 @@
 import collections
 import logging
 
+from suq1 import paginations
+from suqui1 import urls, wsgihelpers
 import webob
 
-from .. import contexts, conv, model, paginations, templates, urls, wsgihelpers
+from .. import contexts, conv, model, templates
 
 
 log = logging.getLogger(__name__)

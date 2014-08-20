@@ -28,7 +28,9 @@
 
 import logging
 
-from .. import contexts, templates, urls, wsgihelpers
+from suqui1 import urls, wsgihelpers
+
+from .. import contexts, templates
 from . import accounts, sessions
 
 

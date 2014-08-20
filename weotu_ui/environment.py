@@ -36,7 +36,7 @@ import pkg_resources
 import pymongo
 
 import weotu_ui
-from . import conv, model, templates
+from . import contexts, conv, model, templates
 
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
@@ -104,16 +104,22 @@ def load_environment(global_conf, app_conf):
         errorware['from_address'] = conf['from_address']
         errorware['smtp_server'] = conf.get('smtp_server', 'localhost')
 
-    # Load MongoDB database.
-    db = pymongo.Connection()[conf['database']]
-    model.init(db)
-
     # Create the Mako TemplateLookup, with the default auto-escaping.
     templates.dirs = [os.path.join(app_dir, 'templates')]
 
+    components = dict(
+        conf = conf,
+        contexts = contexts,
+        conv = conv,
+        db = pymongo.Connection()[conf['database']],
+        model = model,
+        templates = templates,
+        )
+    model.init(components)
 
-def setup_environment():
+
+def setup_environment(drop_indexes = False):
     """Setup the application environment (after it has been loaded)."""
 
     # Setup MongoDB database.
-    model.setup()
+    model.setup(drop_indexes = drop_indexes)

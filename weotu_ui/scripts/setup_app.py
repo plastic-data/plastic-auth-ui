@@ -44,6 +44,8 @@ log = logging.getLogger(app_name)
 def main():
     parser = argparse.ArgumentParser(description = __doc__)
     parser.add_argument('config', help = "path of Weotu-UI configuration file")
+    parser.add_argument('-d', '--drop-indexes', action = 'store_true', default = False,
+        help = "Remove existing indexes before reindexing")
     parser.add_argument('-s', '--section', default = 'main',
         help = "Name of configuration section in configuration file")
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
@@ -51,7 +53,7 @@ def main():
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
     site_conf = paste.deploy.appconfig('config:{0}#{1}'.format(os.path.abspath(args.config), args.section))
     environment.load_environment(site_conf.global_conf, site_conf.local_conf)
-    environment.setup_environment()
+    environment.setup_environment(drop_indexes = args.drop_indexes)
 
     return 0
 

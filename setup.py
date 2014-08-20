@@ -77,6 +77,7 @@ setup(
         'bleach >= 1.2',
         'Mako >= 0.8',
 #        'pymongo >= 2.2',
+        'Suq1 >= 0.1dev',
         'WebError >= 0.10',
         'WebOb >= 1.1',
         ],

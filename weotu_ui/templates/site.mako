@@ -31,7 +31,9 @@
 <%!
 import urlparse
 
-from weotu_ui import conf, model, urls
+from suqui1 import urls
+
+from weotu_ui import conf, model
 %>
 
 

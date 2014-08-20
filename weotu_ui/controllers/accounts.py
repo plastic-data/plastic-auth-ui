@@ -38,10 +38,12 @@ import uuid
 from biryani1 import strings
 import pymongo
 import requests
+from suq1 import paginations
+from suqui1 import urls, wsgihelpers
 import webob
 import webob.multidict
 
-from .. import conf, contexts, conv, model, paginations, templates, urls, wsgihelpers
+from .. import conf, contexts, conv, model, templates
 
 
 inputs_to_account_admin_data = conv.struct(
@@ -163,7 +165,7 @@ def admin_edit(req):
             account.set_attributes(**data)
             if account.api_key is None:
                 account.api_key = unicode(uuid.uuid4())
-            account.compute_words()
+            account.compute_attributes()
             account.save(ctx, safe = True)
 
             # View account.
@@ -343,7 +345,7 @@ def api1_authenticate(req):
     try:
         response = urllib2.urlopen(request, unicode(json.dumps(
             dict(
-                client_token = conf['api_token'],
+                access_token = conf['api_token'],
                 email = data['email'],
                 password = data['password'],
                 relying_party_id = data['client_id'],
@@ -399,7 +401,7 @@ def api1_authenticate(req):
                 raise
             error = response_json['error']
             errors = error['errors'][0]
-            errors.pop('client_token', None)
+            errors.pop('access_token', None)
             relying_party_id_error = errors.pop('relying_party_id', None)
             if relying_party_id_error is not None:
                 errors['client_id'] = relying_party_id_error
@@ -593,7 +595,7 @@ def login(req):
         user.email = verification_data['email']
         user.full_name = verification_data['email']
         user.slug = strings.slugify(user.full_name)
-        user.compute_words()
+        user.compute_attributes()
         user.save(ctx, safe = True)
     ctx.user = user
 

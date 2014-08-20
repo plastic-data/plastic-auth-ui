@@ -24,7 +24,9 @@
 
 
 <%!
-from weotu_ui import model, texthelpers, urls
+from suq1 import texthelpers
+
+from weotu_ui import model, urls
 %>
 
 

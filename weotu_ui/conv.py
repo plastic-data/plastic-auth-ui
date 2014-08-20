@@ -26,39 +26,5 @@
 """Conversion functions"""
 
 
-from biryani1.baseconv import *
-from biryani1.bsonconv import *
-from biryani1.datetimeconv import *
-from biryani1.jsonconv import *
-from biryani1.states import default_state, State
-from biryani1.uuidconv import *
+from suqui1.conv import *
 
-
-input_to_words = pipe(
-    input_to_slug,
-    function(lambda slug: sorted(set(slug.split(u'-')))),
-    empty_to_none,
-    )
-
-
-#json_to_item_attributes = pipe(
-#    test_isinstance(dict),
-#    struct(
-#        dict(
-#            id = pipe(
-#                input_to_object_id,
-#                not_none,
-#                ),
-#            ),
-#        default = noop,  # TODO
-#        ),
-#    rename_item('id', '_id'),
-#    )
-
-
-def method(method_name, *args, **kwargs):
-    def method_converter(value, state = None):
-        if value is None:
-            return value, None
-        return getattr(value, method_name)(state or default_state, *args, **kwargs)
-    return method_converter

@@ -23,61 +23,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-"""Middleware initialization"""
+"""WSGI application initialization"""
 
 
-import logging
-import re
-import urllib
+from suqui1 import middlewares
 
-from paste.cascade import Cascade
-from paste.urlparser import StaticURLParser
-import webob
-from weberror.errormiddleware import ErrorMiddleware
-
-from . import conf, contexts, controllers, environment, model, urls
-
-
-lang_re = re.compile('^/(?P<lang>en|fr)(?=/|$)')
-log = logging.getLogger(__name__)
-percent_encoding_re = re.compile('%[\dA-Fa-f]{2}')
-
-
-def environment_setter(app):
-    """WSGI middleware that sets request-dependant environment."""
-    def set_environment(environ, start_response):
-        req = webob.Request(environ)
-        ctx = contexts.Ctx(req)
-        urls.application_url = req.application_url
-#        if conf['host_urls'] is not None:
-#            host_url = req.host_url + '/'
-#            if host_url not in conf['host_urls']:
-#                return wsgihelpers.bad_request(ctx, explanation = ctx._('Web site not found.'))(environ,
-#                    start_response)
-        model.configure(ctx)
-        return app(req.environ, start_response)
-
-    return set_environment
-
-
-def language_detector(app):
-    """WSGI middleware that detect language symbol in requested URL or otherwise in Accept-Language header."""
-    def detect_language(environ, start_response):
-        req = webob.Request(environ)
-        ctx = contexts.Ctx(req)
-        match = lang_re.match(req.path_info)
-        if match is None:
-            ctx.lang = [
-                req.accept_language.best_match([('fr-FR', 1), ('fr', 1), ('en-US', 1), ('en', 1)],
-                    default_match = 'fr').split('-', 1)[0],
-                ]
-        else:
-            ctx.lang = [match.group('lang')]
-            req.script_name += req.path_info[:match.end()]
-            req.path_info = req.path_info[match.end():]
-        return app(req.environ, start_response)
-
-    return detect_language
+from . import controllers, environment
 
 
 def make_app(global_conf, **app_conf):
@@ -98,39 +49,4 @@ def make_app(global_conf, **app_conf):
     # Dispatch request to controllers.
     app = controllers.make_router()
 
-    # Init request-dependant environment
-    app = environment_setter(app)
-    app = language_detector(app)
-
-    # Repair badly encoded query in request URL.
-    app = request_query_encoding_fixer(app)
-
-    # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
-
-    # Handle Python exceptions
-    if not conf['debug']:
-        app = ErrorMiddleware(app, global_conf, **conf['errorware'])
-
-    if conf['static_files']:
-        # Serve static files
-        static_app = StaticURLParser(conf['static_files_dir'])
-        app = Cascade([static_app, app])
-
-    return app
-
-
-def request_query_encoding_fixer(app):
-    """WSGI middleware that repairs a badly encoded query in request URL."""
-    def fix_request_query_encoding(environ, start_response):
-        req = webob.Request(environ)
-        query_string = req.query_string
-        if query_string is not None:
-            try:
-                urllib.unquote(query_string).decode('utf-8')
-            except UnicodeDecodeError:
-                req.query_string = percent_encoding_re.sub(
-                    lambda match: urllib.quote(urllib.unquote(match.group(0)).decode('iso-8859-1').encode('utf-8')),
-                    query_string)
-        return app(req.environ, start_response)
-
-    return fix_request_query_encoding
+    return middlewares.wrap_app(app)
