@@ -260,7 +260,7 @@ def api1_authenticate(req):
         content_type = content_type.split(';', 1)[0].strip()
     if content_type == 'application/json':
         inputs, error = conv.pipe(
-            conv.make_input_to_json(),
+            conv.make_input_to_json(object_pairs_hook = collections.OrderedDict),
             conv.test_isinstance(dict),
             )(req.body, state = ctx)
         if error is not None:
@@ -359,7 +359,7 @@ def api1_authenticate(req):
         response_text = response.read()
         if 400 <= response.code < 404:
             response_json, error = conv.pipe(
-                conv.make_input_to_json(),
+                conv.make_input_to_json(object_pairs_hook = collections.OrderedDict),
                 conv.test_isinstance(dict),
                 conv.struct(
                     dict(
@@ -427,7 +427,7 @@ def api1_authenticate(req):
             raise
     response_text = response.read()
     authentication = conv.check(conv.pipe(
-        conv.make_input_to_json(),
+        conv.make_input_to_json(object_pairs_hook = collections.OrderedDict),
         conv.test_isinstance(dict),
         conv.struct(
             dict(
