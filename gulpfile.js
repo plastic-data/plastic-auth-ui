@@ -7,8 +7,8 @@ var production = process.env.NODE_ENV === 'production';
 
 function scripts(watch) {
   var bundler = watch ? watchify() : browserify();
-  bundler.require('./weotu_ui/static/src/index.jsx', {expose: 'index'}); // {basedir: __dirname}
-  bundler.require('./weotu_ui/static/src/sign-in.jsx', {expose: 'sign-in'}); // {basedir: __dirname}
+  bundler.require('./plastic_auth_ui/static/src/index.jsx', {expose: 'index'}); // {basedir: __dirname}
+  bundler.require('./plastic_auth_ui/static/src/sign-in.jsx', {expose: 'sign-in'}); // {basedir: __dirname}
   bundler.transform('reactify');
 
   // Optionally, you can apply transforms
@@ -21,7 +21,7 @@ function scripts(watch) {
   function rebundle() {
     return bundler.bundle({debug: !production})
       .pipe(source('bundle.js'))
-      .pipe(gulp.dest('./weotu_ui/static/dist'));
+      .pipe(gulp.dest('./plastic_auth_ui/static/dist'));
   }
 
   return rebundle();

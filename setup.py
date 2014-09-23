@@ -2,20 +2,20 @@
 # -*- coding: utf-8 -*-
 
 
-# Weotu-UI -- Accounts & authentication user interface
+# Plastic-Auth-UI -- Accounts & authentication user interface
 # By: Emmanuel Raviart <emmanuel@raviart.com>
 #
 # Copyright (C) 2014 Emmanuel Raviart
-# https://gitorious.org/weotu
+# https://github.com/plastic-data/plastic-auth-ui
 #
-# This file is part of Weotu-UI.
+# This file is part of Plastic-Auth-UI.
 #
-# Weotu-UI is free software; you can redistribute it and/or modify
+# Plastic-Auth-UI is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 #
-# Weotu-UI is distributed in the hope that it will be useful,
+# Plastic-Auth-UI is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
@@ -51,7 +51,7 @@ doc_lines = __doc__.split('\n')
 
 
 setup(
-    name = 'Weotu-UI',
+    name = 'Plastic-Auth-UI',
     version = '0.1dev',
 
     author = 'Emmanuel Raviart',
@@ -61,14 +61,14 @@ setup(
     keywords = 'answer popularity question vote server web',
     license = 'http://www.fsf.org/licensing/licenses/agpl-3.0.html',
     long_description = '\n'.join(doc_lines[2:]),
-    url = 'https://gitorious.org/weotu',
+    url = 'https://github.com/plastic-data/plastic-auth-ui',
 
     data_files = [
-        ('share/locale/fr/LC_MESSAGES', ['weotu_ui/i18n/fr/LC_MESSAGES/weotu-ui.mo']),
+        ('share/locale/fr/LC_MESSAGES', ['plastic_auth_ui/i18n/fr/LC_MESSAGES/plastic-auth-ui.mo']),
         ],
     entry_points = {
-        'distutils.commands': 'build_assets = weotu_ui.commands:BuildAssets',
-        'paste.app_factory': 'main = weotu_ui.application:make_app',
+        'distutils.commands': 'build_assets = plastic_auth_ui.commands:BuildAssets',
+        'paste.app_factory': 'main = plastic_auth_ui.application:make_app',
         },
     include_package_data = True,
     install_requires = [
@@ -81,11 +81,11 @@ setup(
         'WebError >= 0.10',
         'WebOb >= 1.1',
         ],
-    message_extractors = {'weotu_ui': [
+    message_extractors = {'plastic_auth_ui': [
         ('**.py', 'python', None),
         ('templates/**.mako', 'mako', {'input_encoding': 'utf-8'}),
         ('static/**', 'ignore', None)]},
-#    package_data = {'weotu_ui': ['i18n/*/LC_MESSAGES/*.mo']},
+#    package_data = {'plastic_auth_ui': ['i18n/*/LC_MESSAGES/*.mo']},
     packages = find_packages(),
     paster_plugins = ['PasteScript'],
     setup_requires = ['PasteScript >= 1.6.3'],

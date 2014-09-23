@@ -1,4 +1,4 @@
-Weotu-UI
+Plastic-Auth-UI
 ===========
 
 Accounts & authentication user interface
@@ -9,8 +9,8 @@ Install
 
 ::
 
-    git clone TODO/weotu-ui.git
-    cd weotu-ui/
+    git clone TODO/plastic-auth-ui.git
+    cd plastic-auth-ui/
     sudo npm install -g browserify
     sudo npm install -g gulp
     sudo npm install -g react-tools
